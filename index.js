@@ -31,9 +31,27 @@ app.get("/order/search", (req, res) => {
   console.log(customerName);
   const foodName = req.query.item;
   console.log(foodName);
-  const filteredOrders = orders.filter(
-    (order) => order.customer === customerName || order.item === foodName
-  );
+
+  const filterOrders = (orders) => {
+    if (customerName && foodName) {
+      const filteredOrders = orders.filter(
+        (order) => order.customer === customerName && order.item === foodName
+      );
+      return filteredOrders;
+    } else if (customerName && !foodName) {
+      const filteredOrders = orders.filter(
+        (order) => order.customer === customerName
+      );
+      console.log(filteredOrders);
+      return filteredOrders;
+    } else if (!customerName && foodName) {
+      const filteredOrders = orders.filter((order) => order.item === foodName);
+      console.log(filteredOrders);
+      return filteredOrders;
+    }
+    return orders;
+  };
+  const filteredOrders = filterOrders(orders);
   console.log(filteredOrders);
   if (filteredOrders.length > 0) {
     res.json(filteredOrders);
@@ -57,7 +75,6 @@ app.post("/orders", (req, res) => {
 app.put("/orders/:id", (req, res) => {
   const orderId = parseInt(req.params.id);
   const orderIndex = orders.findIndex(({ id }) => id === orderId);
-  console.log(orderIndex);
   if (orderIndex != -1) {
     const { item, quantity, customer } = req.body;
     orders[orderIndex] = { id: orderId, item, quantity, customer };
