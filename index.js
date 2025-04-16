@@ -56,7 +56,7 @@ app.get("/order/search", (req, res) => {
   if (filteredOrders.length > 0) {
     res.json(filteredOrders);
   } else {
-    res.status(404).json({ error: "No orders found for this customer" });
+    res.status(404).json({ error: "No orders found" });
   }
 });
 
